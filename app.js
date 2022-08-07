@@ -1,6 +1,6 @@
-const fs = require('fs');
 const inquirer = require('inquirer');
 const generatePage = require('./src/page-template');
+const { writeFile, copyFile } = require('./utils/generate-site');
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -8,51 +8,50 @@ const promptUser = () => {
       type: 'input',
       name: 'name',
       message: 'What is your name? (Required)',
-      validate: (nameInput) => {
+      validate: nameInput => {
         if (nameInput) {
           return true;
         } else {
           console.log('Please enter your name!');
           return false;
         }
-      },
+      }
     },
     {
       type: 'input',
       name: 'github',
       message: 'Enter your GitHub Username (Required)',
-      validate: (githubInput) => {
+      validate: githubInput => {
         if (githubInput) {
           return true;
         } else {
           console.log('Please enter your GitHub username!');
           return false;
         }
-      },
+      }
     },
     {
       type: 'confirm',
       name: 'confirmAbout',
-      message:
-        'Would you like to enter some information about yourself for an "About" section?',
-      default: true,
+      message: 'Would you like to enter some information about yourself for an "About" section?',
+      default: true
     },
     {
       type: 'input',
       name: 'about',
       message: 'Provide some information about yourself:',
-      when: ({ confirmAbout }) => confirmAbout,
-    },
+      when: ({ confirmAbout }) => confirmAbout
+    }
   ]);
 };
 
-const promptProject = (portfolioData) => {
+const promptProject = portfolioData => {
   console.log(`
 =================
 Add a New Project
 =================
 `);
-  console.log('line 55', portfolioData);
+
   // If there's no 'projects' array property, create one
   if (!portfolioData.projects) {
     portfolioData.projects = [];
@@ -63,69 +62,61 @@ Add a New Project
         type: 'input',
         name: 'name',
         message: 'What is the name of your project? (Required)',
-        validate: (nameInput) => {
+        validate: nameInput => {
           if (nameInput) {
             return true;
           } else {
             console.log('You need to enter a project name!');
             return false;
           }
-        },
+        }
       },
       {
         type: 'input',
         name: 'description',
         message: 'Provide a description of the project (Required)',
-        validate: (descriptionInput) => {
+        validate: descriptionInput => {
           if (descriptionInput) {
             return true;
           } else {
             console.log('You need to enter a project description!');
             return false;
           }
-        },
+        }
       },
       {
         type: 'checkbox',
         name: 'languages',
         message: 'What did you this project with? (Check all that apply)',
-        choices: [
-          'JavaScript',
-          'HTML',
-          'CSS',
-          'ES6',
-          'jQuery',
-          'Bootstrap',
-          'Node',
-        ],
+        choices: ['JavaScript', 'HTML', 'CSS', 'ES6', 'jQuery', 'Bootstrap', 'Node']
       },
       {
         type: 'input',
         name: 'link',
         message: 'Enter the GitHub link to your project. (Required)',
-        validate: (linkInput) => {
+        validate: linkInput => {
           if (linkInput) {
             return true;
           } else {
             console.log('You need to enter a project GitHub link!');
             return false;
           }
-        },
+        }
       },
       {
         type: 'confirm',
         name: 'feature',
         message: 'Would you like to feature this project?',
-        default: false,
+        default: false
       },
       {
         type: 'confirm',
         name: 'confirmAddProject',
         message: 'Would you like to enter another project?',
-        default: false,
-      },
+        default: false
+      }
     ])
-    .then((projectData) => {
+    .then(projectData => {
       portfolioData.projects.push(projectData);
       if (projectData.confirmAddProject) {
         return promptProject(portfolioData);
@@ -137,19 +128,24 @@ Add a New Project
 
 promptUser()
   .then(promptProject)
-  .then((portfolioData) => {
+  .then(portfolioData => {
     return generatePage(portfolioData);
   })
-  .then((pageHTML) => {
+  .then(pageHTML => {
     return writeFile(pageHTML);
   })
-  .then((writeFileResponse) => {
+  .then(writeFileResponse => {
     console.log(writeFileResponse);
     return copyFile();
   })
-  .then((copyFileResponse) => {
+  .then(copyFileResponse => {
     console.log(copyFileResponse);
   })
-  .catch((err) => {
+  .catch(err => {
     console.log(err);
   });
+//From the root of your project in the command line, run the following command but don't fill out the ensuing prompts just yet: npm init
+//Fortunately, npm has devised an intelligent way to manage these dependencies, with the package.json and package-lock.json files. The dependencies for a Node.js application can easily be reinstalled. Simply type the following command in the project's root directory:
+//npm install
+//This command reads the corresponding package-lock.json file, downloads the dependencies from npm, and saves them in the node_modules folder.
+//echo node_modules/ > .gitignore

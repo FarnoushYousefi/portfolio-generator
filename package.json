@@ -1,22 +1,28 @@
 {
   "name": "portfolio-generator",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "app.js",
+  "directories": {
+    "test": "test"
   },
+  "scripts": {
+    "test": "node ./test/sample.js",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  },
+  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FarnoushYousefi/portfolio-generator.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/FarnoushYousefi/portfolio-generator/issues"
   },
   "homepage": "https://github.com/FarnoushYousefi/portfolio-generator#readme",
-  "dependencies": {
-    "inquirer": "^8.1.1"
-  }
+  "description": ""
 }
